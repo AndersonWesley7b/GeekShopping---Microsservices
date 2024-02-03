@@ -23,33 +23,33 @@ namespace GeekShopping.ProductApi.Repository
             return _Mapper.Map<List<ProductVO>>(Products);
         }
 
-        public async Task<ProductVO> FindById(long Id)
+        public async Task<ProductVO> FindById(long _Id)
         {
             Product Product = await _Context.Products
-                                .Where(x => x.Id == Id)
+                                .Where(x => x.Id == _Id)
                                 .FirstOrDefaultAsync();
             return _Mapper.Map<ProductVO>(Product);
         }
 
-        public async Task<ProductVO> Create(ProductVO Vo)
+        public async Task<ProductVO> Create(ProductVO _Vo)
         {
-            Product Product = _Mapper.Map<Product>(Vo);
+            Product Product = _Mapper.Map<Product>(_Vo);
             _Context.Products.Add(Product);
             await _Context.SaveChangesAsync();
             return _Mapper.Map<ProductVO>(Product);
         }
 
-        public async Task<ProductVO> Update(ProductVO Vo)
+        public async Task<ProductVO> Update(ProductVO _Vo)
         {
-            Product Product = _Mapper.Map<Product>(Vo);
+            Product Product = _Mapper.Map<Product>(_Vo);
             _Context.Products.Update(Product);
             await _Context.SaveChangesAsync();
             return _Mapper.Map<ProductVO>(Product);
         }
 
-        public async Task<bool> Delete(long Id)
+        public async Task<bool> Delete(long _Id)
         {
-            Product Product = await _Context.Products.Where(p => p.Id == Id)
+            Product Product = await _Context.Products.Where(p => p.Id == _Id)
                     .FirstOrDefaultAsync();
             if (Product == null) 
                 return false;
