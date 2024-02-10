@@ -1,81 +1,78 @@
 ﻿using GeekShopping.Web.Models;
 using GeekShopping.Web.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GeekShopping.Web.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductService _ProductService;
+        private readonly IProductService _productService;
 
-        public ProductController(IProductService ProductService)
+        public ProductController(IProductService productService)
         {
-            _ProductService = ProductService;
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
         }
 
         public async Task<IActionResult> ProductIndex()
         {
-            var Products = await _ProductService.FindAllProducts();
-            return View(Products);
-        } 
+            var products = await _productService.FindAllProducts();
+            return View(products);
+        }
 
-        public async Task<IActionResult> ProductCreate()
+        public IActionResult ProductCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProductCreate(ProductModel Model)
+        public async Task<IActionResult> ProductCreate(ProductModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var Response = await _ProductService.CreateProduct(Model);
-                if(Response != null)
-                    return RedirectToAction(nameof(ProductIndex));
+                var response = await _productService.CreateProduct(model);
+                if (response != null) return RedirectToAction(
+                     nameof(ProductIndex));
             }
-           
-            return View(Model);
-
-        }
-        
-        public async Task<IActionResult> ProductUpdate(int Id)
-        {
-            var Model = await _ProductService.FindProductById(Id);
-            if(Model != null)
-                return View(Model);
-            return NotFound();
+            return View(model);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> ProductUpdate(ProductModel Model)
+        public async Task<IActionResult> ProductUpdate(int id)
         {
-            if(ModelState.IsValid)
-            {
-                var Response = await _ProductService.UpdateProduct(Model);
-                if(Response != null)
-                    return RedirectToAction(nameof(ProductIndex));
-            }
-           
-            return View(Model);
-
-        }
-
-        public async Task<IActionResult> ProductDelete(int Id)
-        {
-            var Model = await _ProductService.FindProductById(Id);
-            if (Model != null)
-                return View(Model);
+            var model = await _productService.FindProductById(id);
+            if (model != null) return View(model);
             return NotFound();
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProductDelete(ProductModel Model)
+        public async Task<IActionResult> ProductUpdate(ProductModel model)
         {
-                var Response = await _ProductService.DeleteProductById(Model.Id);
-                if (Response)
-                    return RedirectToAction(nameof(ProductIndex));
-            return View(Model);
+            if (ModelState.IsValid)
+            {
+                var response = await _productService.UpdateProduct(model);
+                if (response != null) return RedirectToAction(
+                     nameof(ProductIndex));
+            }
+            return View(model);
+        }
 
+        public async Task<IActionResult> ProductDelete(int id)
+        {
+            var model = await _productService.FindProductById(id);
+            if (model != null) return View(model);
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProductDelete(ProductModel model)
+        {
+            var response = await _productService.DeleteProductById(model.Id);
+            if (response) return RedirectToAction(
+                    nameof(ProductIndex));
+            return View(model);
         }
     }
 }

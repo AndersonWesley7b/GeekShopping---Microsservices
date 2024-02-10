@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<GeekShopping.Web.Models.ProductModel>
 
 <br/>
-<br />
+<br/>
 <div class="container p-4 border">
     <div class="row pb-2">
         <div class="col">
@@ -38,7 +38,7 @@
                         @item.CategoryName
                     </td>
                     <td>
-                        @((item.Price.ToString("c")))
+                        @((item.Price).ToString("c"))
                     </td>
                     <td>
                        <a asp-action="ProductUpdate" class="btn btn-success" asp-route-id="@item.Id">

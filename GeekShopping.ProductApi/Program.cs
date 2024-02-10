@@ -4,7 +4,6 @@ using GeekShopping.ProductApi.Model.Context;
 using GeekShopping.ProductApi.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using MySqlConnector;
 
 namespace GeekShopping.ProductApi
 {
@@ -20,6 +19,7 @@ namespace GeekShopping.ProductApi
 
 
             builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 5))));
+
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             IMapper Mapper = MappingConfig.RegisterMaps().CreateMapper();
             builder.Services.AddSingleton(Mapper);
@@ -41,8 +41,9 @@ namespace GeekShopping.ProductApi
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
+            app.UseHttpsRedirection();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
