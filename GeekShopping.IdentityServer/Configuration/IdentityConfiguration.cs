@@ -19,24 +19,22 @@ public static class IdentityConfiguration
     public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
-            new ApiScope("geek_shopping", "GeekShopping Server"),
-            new ApiScope(name: "read", "Read data"),
-            new ApiScope(name: "write", "Write data"),
-            new ApiScope(name: "delete", "Delete data"),
+            new("geek_shopping", "GeekShopping Server"),
+            new(name: "read", "Read data"),
+            new(name: "write", "Write data"),
+            new(name: "delete", "Delete data"),
         };
 
     public static IEnumerable<Client> Clients =>
         new List<Client>
         {
-            new Client
-            {
+            new() {
                 ClientId = "client",
                 ClientSecrets = {new Secret("my_super_secret".Sha256())},
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 AllowedScopes = {"read", "write", "profile"}
             },
-            new Client
-            {
+            new() {
                 ClientId = "geek_shopping",
                 ClientSecrets = {new Secret("my_super_secret".Sha256())},
                 AllowedGrantTypes = GrantTypes.Code,

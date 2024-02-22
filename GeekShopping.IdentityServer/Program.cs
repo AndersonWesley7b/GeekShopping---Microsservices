@@ -1,6 +1,10 @@
+using Duende.IdentityServer.AspNetIdentity;
+using Duende.IdentityServer.Services;
 using GeekShopping.IdentityServer.Configuration;
+using GeekShopping.IdentityServer.Initializer;
 using GeekShopping.IdentityServer.Model;
 using GeekShopping.IdentityServer.Model.Context;
+using GeekShopping.IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,15 +32,21 @@ public class Program
             options.EmitStaticAudienceClaim = true;
 
         }).AddInMemoryIdentityResources(IdentityConfiguration.IdentityResources)
+        .AddInMemoryApiScopes(IdentityConfiguration.ApiScopes)
         .AddInMemoryClients(IdentityConfiguration.Clients)
         .AddAspNetIdentity<ApplicationUser>();
 
-        IdentityBuilder.AddDeveloperSigningCredential();
+        builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
+        builder.Services.AddScoped<IProfileService, ProfileService>();
+
+        IdentityBuilder.AddDeveloperSigningCredential();
 
         builder.Services.AddControllersWithViews();
 
         var app = builder.Build();
+
+        var Initializer = app.Services.CreateScope().ServiceProvider.GetService<IDbInitializer>();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -52,6 +62,8 @@ public class Program
         app.UseIdentityServer();
 
         app.UseAuthorization();
+
+        Initializer.Initialize();
 
         app.MapControllerRoute(
             name: "default",
