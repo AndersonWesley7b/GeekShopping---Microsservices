@@ -20,7 +20,6 @@ namespace GeekShopping.ProductApi.Controllers
                 ArgumentNullException(nameof(Repository));
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductVO>>> FindAll()
         {
