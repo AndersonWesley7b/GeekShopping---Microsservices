@@ -39,6 +39,9 @@ namespace GeekShopping.Web
             
             builder.Services.AddHttpClient<ICartService, CartService>(c =>
             c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CartAPI"]));
+            
+            builder.Services.AddHttpClient<ICouponService, CouponService>(c =>
+            c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CouponAPI"]));
 
             var app = builder.Build();
 

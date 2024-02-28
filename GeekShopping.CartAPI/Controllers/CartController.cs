@@ -1,4 +1,5 @@
 using GeekShopping.CartAPI.Data.ValueObjects;
+using GeekShopping.CartAPI.Messages;
 using GeekShopping.CartAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,6 +49,37 @@ public class CartController : ControllerBase
         if(!status)
             return BadRequest();
         return Ok(status);
+    }
+
+    [HttpPost("apply-coupon")]
+    public async Task<ActionResult<CartVO>> ApplyCoupon(CartVO vo)
+    {
+        var status = await _cartRepository.ApplyCoupon(vo.CartHeader.UserId, vo.CartHeader.CouponCode);
+        if (!status)
+            return NotFound();
+        return Ok(status);
+    } 
+    
+    [HttpDelete("remove-coupon/{userId}")]
+    public async Task<ActionResult<CartVO>> RemoveCoupon(string userId)
+    {
+        var status = await _cartRepository.RemoveCoupon(userId);
+        if (!status)
+            return NotFound();
+        return Ok(status);
+    }
+    
+    [HttpPost("checkout")]
+    public async Task<ActionResult<CheckoutHeaderVO>> Checkout(CheckoutHeaderVO vo)
+    {
+        var cart = await _cartRepository.FindCartByUserId(vo.UserId);
+        if (cart == null)
+            return NotFound();
+        vo.CartDetails = cart.CartDetails;
+        vo.DateTime = DateTime.Now;
+        
+
+        return Ok(vo);
     }
 
 }
